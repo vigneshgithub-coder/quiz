@@ -20,7 +20,6 @@ const Quiz = () => {
 
       // Debug: Log history to the console
       console.log("Fetched Quiz History from IndexedDB:", quizHistory);
-
     };
 
     fetchHistory();
@@ -85,10 +84,20 @@ const Quiz = () => {
       setCurrentQuestion(currentQuestion + 1);
       setTimeLeft(30); // Reset timer for the next question
     } else {
-      // Save the attempt to IndexedDB
-      saveQuizAttempt({ score, totalQuestions: questions.length });
+      // Save the attempt to IndexedDB and fetch updated history
+      saveQuizAttempt({ score, totalQuestions: questions.length }).then(() => {
+        console.log("Saved Attempt to IndexedDB:", { score, totalQuestions: questions.length });
+        fetchUpdatedHistory(); // Fetch updated history after saving
+      });
       setQuizCompleted(true);
     }
+  };
+
+  // Fetch updated history
+  const fetchUpdatedHistory = async () => {
+    const updatedHistory = await getQuizHistory();
+    setHistory(updatedHistory);
+    console.log("Updated Quiz History from IndexedDB:", updatedHistory);
   };
 
   const restartQuiz = () => {
