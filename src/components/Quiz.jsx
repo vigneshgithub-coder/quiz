@@ -18,11 +18,11 @@ const Quiz = () => {
       const quizHistory = await getQuizHistory();
       setHistory(quizHistory);
 
-       // Debug: Log history to the console
-    console.log("Fetched Quiz History from IndexedDB:", quizHistory);
+      // Debug: Log history to the console
+      console.log("Fetched Quiz History from IndexedDB:", quizHistory);
 
     };
-   
+
     fetchHistory();
   }, []);
 
