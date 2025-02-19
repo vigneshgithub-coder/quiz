@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import questions from "../question";
+import { saveQuizAttempt, getQuizHistory } from "../services/indexedDB";
 
 const Quiz = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -9,7 +10,21 @@ const Quiz = () => {
   const [timeLeft, setTimeLeft] = useState(30); // 30 seconds for each question
   const [showAnswer, setShowAnswer] = useState(false); // To reveal correct/incorrect answers
   const [quizCompleted, setQuizCompleted] = useState(false); // Flag for quiz completion
-  const [attempts, setAttempts] = useState([]); // Array to store attempt scores
+  const [history, setHistory] = useState([]); // Store quiz history
+
+  // Fetch quiz history from IndexedDB on component mount
+  useEffect(() => {
+    const fetchHistory = async () => {
+      const quizHistory = await getQuizHistory();
+      setHistory(quizHistory);
+
+       // Debug: Log history to the console
+    console.log("Fetched Quiz History from IndexedDB:", quizHistory);
+
+    };
+   
+    fetchHistory();
+  }, []);
 
   // Timer logic
   useEffect(() => {
@@ -24,10 +39,9 @@ const Quiz = () => {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
-  //progresspercentage
+  // Progress percentage and color
   const progressPercentage = ((currentQuestion + 1) / questions.length) * 100;
   const progressColor = progressPercentage < 50 ? "#f44336" : "#4caf50";
-
 
   const handleTimeout = () => {
     setFeedback("Time's up!");
@@ -71,8 +85,8 @@ const Quiz = () => {
       setCurrentQuestion(currentQuestion + 1);
       setTimeLeft(30); // Reset timer for the next question
     } else {
-      // Record the score for this attempt and mark the quiz as completed
-      setAttempts((prevAttempts) => [...prevAttempts, score]);
+      // Save the attempt to IndexedDB
+      saveQuizAttempt({ score, totalQuestions: questions.length });
       setQuizCompleted(true);
     }
   };
@@ -94,15 +108,17 @@ const Quiz = () => {
         <h2>Quiz Completed!</h2>
         <p>Your Score: {score}/{questions.length}</p>
         <button onClick={restartQuiz}>Try Again</button>
-        <h3>Attempt History</h3>
+
+        <h3>Quiz History</h3>
         <ul>
-          {attempts.map((attemptScore, index) => (
+          {history.map((attempt, index) => (
             <li key={index}>
-              Attempt {index + 1}: {attemptScore}/{questions.length}
+              Attempt {index + 1}: {attempt.score}/{attempt.totalQuestions} on{" "}
+              {new Date(attempt.timestamp).toLocaleString()}
             </li>
           ))}
         </ul>
-        <p>Total Attempts: {attempts.length}</p>
+        <p>Total Attempts: {history.length}</p>
       </div>
     );
   }
@@ -114,7 +130,6 @@ const Quiz = () => {
       <div>
         {questions[currentQuestion].type === "MCQ" ? (
           questions[currentQuestion].options.map((option, index) => {
-            // Determine the button color based on selected and correct answers
             let backgroundColor = "#f0f0f0"; // Default color
             if (showAnswer) {
               if (option === questions[currentQuestion].correctAnswer) {
@@ -137,7 +152,7 @@ const Quiz = () => {
                   borderRadius: "5px",
                   backgroundColor,
                   cursor: "pointer",
-                  pointerEvents: showAnswer ? "none" : "auto", // Disable after submission
+                  pointerEvents: showAnswer ? "none" : "auto",
                 }}
               >
                 {option}
@@ -155,18 +170,16 @@ const Quiz = () => {
         )}
       </div>
 
-       {/* Progress Bar */}
-       <div className="progress-bar">
-            <div
-              className="progress"
-              style={{
-                width: `${progressPercentage}%`,
-                backgroundColor: progressColor,
-              }}
-              
-              
-            ></div>
-          </div>
+      {/* Progress Bar */}
+      <div className="progress-bar">
+        <div
+          className="progress"
+          style={{
+            width: `${progressPercentage}%`,
+            backgroundColor: progressColor,
+          }}
+        ></div>
+      </div>
 
       <p>Time Left: {timeLeft} seconds</p>
       <button onClick={handleAnswer} disabled={!selectedAnswer || showAnswer}>
