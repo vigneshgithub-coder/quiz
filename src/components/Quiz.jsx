@@ -24,6 +24,11 @@ const Quiz = () => {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
+  //progresspercentage
+  const progressPercentage = ((currentQuestion + 1) / questions.length) * 100;
+  const progressColor = progressPercentage < 50 ? "#f44336" : "#4caf50";
+
+
   const handleTimeout = () => {
     setFeedback("Time's up!");
     setShowAnswer(true); // Reveal the correct answer
@@ -149,6 +154,20 @@ const Quiz = () => {
           />
         )}
       </div>
+
+       {/* Progress Bar */}
+       <div className="progress-bar">
+            <div
+              className="progress"
+              style={{
+                width: `${progressPercentage}%`,
+                backgroundColor: progressColor,
+              }}
+              
+              
+            ></div>
+          </div>
+
       <p>Time Left: {timeLeft} seconds</p>
       <button onClick={handleAnswer} disabled={!selectedAnswer || showAnswer}>
         Submit Answer
