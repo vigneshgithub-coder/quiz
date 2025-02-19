@@ -108,19 +108,37 @@ const Quiz = () => {
       <p>{questions[currentQuestion].question}</p>
       <div>
         {questions[currentQuestion].type === "MCQ" ? (
-          questions[currentQuestion].options.map((option, index) => (
-            <button
-              key={index}
-              onClick={() => setSelectedAnswer(option)}
-              style={{
-                margin: "5px",
-                padding: "10px",
-                backgroundColor: selectedAnswer === option ? "#ADD8E6" : "#f0f0f0",
-              }}
-            >
-              {option}
-            </button>
-          ))
+          questions[currentQuestion].options.map((option, index) => {
+            // Determine the button color based on selected and correct answers
+            let backgroundColor = "#f0f0f0"; // Default color
+            if (showAnswer) {
+              if (option === questions[currentQuestion].correctAnswer) {
+                backgroundColor = "#4caf50"; // Green for correct answer
+              } else if (option === selectedAnswer) {
+                backgroundColor = "#f44336"; // Red for wrong answer
+              }
+            } else if (selectedAnswer === option) {
+              backgroundColor = "#ADD8E6"; // Light blue for selected option
+            }
+
+            return (
+              <button
+                key={index}
+                onClick={() => setSelectedAnswer(option)}
+                style={{
+                  margin: "5px",
+                  padding: "10px",
+                  border: "none",
+                  borderRadius: "5px",
+                  backgroundColor,
+                  cursor: "pointer",
+                  pointerEvents: showAnswer ? "none" : "auto", // Disable after submission
+                }}
+              >
+                {option}
+              </button>
+            );
+          })
         ) : (
           <input
             type="number"
@@ -132,7 +150,7 @@ const Quiz = () => {
         )}
       </div>
       <p>Time Left: {timeLeft} seconds</p>
-      <button onClick={handleAnswer} disabled={!selectedAnswer}>
+      <button onClick={handleAnswer} disabled={!selectedAnswer || showAnswer}>
         Submit Answer
       </button>
       {feedback && <p>{feedback}</p>}

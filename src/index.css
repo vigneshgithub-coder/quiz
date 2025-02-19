@@ -1,25 +1,124 @@
 /* Global Styles */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f8f9fa;
+  font-family: "Roboto", sans-serif;
   margin: 0;
-  padding: 20px;
+  padding: 0;
+  background: linear-gradient(135deg, #3a7593, #90caf9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
 }
 
 h2 {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   color: #333;
+  text-align: center;
   margin-bottom: 20px;
-  animation: fadeIn 1s ease-in-out;
 }
 
 p {
   font-size: 1rem;
   color: #555;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Container for the quiz */
+.quiz-container {
+  width: 100%;
+  max-width: 500px;
+  background: #c53535;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(167, 60, 60, 0.2);
   animation: fadeIn 1s ease-in-out;
 }
 
-/* Question Transition Animation */
+/* Buttons */
+button {
+  margin: 10px 5px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  background-color: #90caf9;
+  color: rgb(19, 17, 17);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+button:hover {
+  background-color: #64b5f6;
+  transform: scale(1.05);
+}
+
+button:disabled {
+  background-color: #e0e0e0;
+  color: #757575;
+  cursor: not-allowed;
+}
+
+/* Input for Integer Questions */
+input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+/* Feedback Text */
+.feedback {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 10px 0;
+  color: #333;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Progress Bar */
+.progress-bar {
+  height: 8px;
+  width: 100%;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 10px 0;
+}
+
+.progress-bar > div {
+  height: 100%;
+  background: #64b5f6;
+  width: 0%;
+  transition: width 0.5s ease;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .quiz-container {
+    width: 90%;
+    padding: 15px;
+  }
+
+  button {
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Animations */
 @keyframes fadeIn {
   0% {
     opacity: 0;
@@ -29,67 +128,4 @@ p {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* Button Hover Effects */
-button {
-  margin: 5px;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: transform 0.3s, background-color 0.3s;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-button:hover {
-  transform: scale(1.1);
-  background-color: #ddd;
-}
-
-button:active {
-  transform: scale(1.05);
-}
-
-/* Feedback Text Animation */
-.feedback {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-top: 10px;
-  color: #333;
-  animation: fadeIn 0.5s ease-in-out, pop 0.5s ease-in-out;
-}
-
-@keyframes pop {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-/* Scoreboard Animation */
-.scoreboard {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #4caf50;
-  animation: fadeIn 1s ease-in-out, pop 0.8s ease-in-out;
-}
-
-/* Button Color Change on Answer Reveal */
-.correct {
-  background-color: #4caf50 !important; /* Green for correct */
-  color: #fff;
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-.wrong {
-  background-color: #f44336 !important; /* Red for wrong */
-  color: #fff;
-  animation: fadeIn 0.5s ease-in-out;
 }
