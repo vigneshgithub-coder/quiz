@@ -52,7 +52,7 @@ const questions = [
       id: 8,
       type: "Integer",
       question: "In which year was the Declaration of Independence signed?",
-      correctAnswer: 1776,
+      correctAnswer: 1947,
     },
     {
       id: 9,

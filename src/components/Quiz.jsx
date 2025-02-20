@@ -52,6 +52,7 @@ const Quiz = () => {
 
   const handleAnswer = () => {
     const correctAnswer = questions[currentQuestion].correctAnswer;
+
     if (questions[currentQuestion].type === "MCQ") {
       if (selectedAnswer === correctAnswer) {
         setScore(score + 1);
@@ -61,11 +62,12 @@ const Quiz = () => {
       }
     } else if (questions[currentQuestion].type === "Integer") {
       const numericAnswer = parseInt(selectedAnswer, 10);
+
       if (numericAnswer === correctAnswer) {
         setScore(score + 1);
         setFeedback("Correct!");
       } else {
-        setFeedback("Wrong!");
+        setFeedback(`Wrong! The correct answer is ${correctAnswer}.`);
       }
     }
 
@@ -169,13 +171,38 @@ const Quiz = () => {
             );
           })
         ) : (
-          <input
-            type="number"
-            value={selectedAnswer}
-            onChange={(e) => setSelectedAnswer(e.target.value)}
-            placeholder="Enter your answer"
-            style={{ padding: "5px", margin: "10px" }}
-          />
+          <>
+            <input
+              type="number"
+              value={selectedAnswer}
+              onChange={(e) => setSelectedAnswer(e.target.value)}
+              placeholder="Enter your answer"
+              style={{
+                padding: "10px",
+                margin: "10px 0",
+                border: "1px solid",
+                borderRadius: "5px",
+                fontSize: "1rem",
+                width: "100%",
+                backgroundColor: showAnswer
+                  ? parseInt(selectedAnswer, 10) === questions[currentQuestion].correctAnswer
+                    ? "#d4edda" // Light green for correct answer
+                    : "#f8d7da" // Light red for incorrect answer
+                  : "#ffffff", // Default white
+                borderColor: showAnswer
+                  ? parseInt(selectedAnswer, 10) === questions[currentQuestion].correctAnswer
+                    ? "#28a745" // Green for correct answer
+                    : "#dc3545" // Red for incorrect answer
+                  : "#cccccc", // Default gray
+              }}
+              disabled={showAnswer} // Disable the input after showing the result
+            />
+            {showAnswer && parseInt(selectedAnswer, 10) !== questions[currentQuestion].correctAnswer && (
+              <p style={{ color: "#dc3545", marginTop: "5px" }}>
+                Correct Answer: {questions[currentQuestion].correctAnswer}
+              </p>
+            )}
+          </>
         )}
       </div>
 
